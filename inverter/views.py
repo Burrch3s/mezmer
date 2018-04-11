@@ -7,24 +7,18 @@ from .models import *
 
 # Create your views here.
 def index(request):
-    return render(
-        request,
-        'index.html',
-        )
-def uploadFile(request, pk):
-    file_inst = get_object_or_404(FileInstance, pk=pk)
+    #file_inst = get_object_or_404(FileInstance, pk=pk)
+    file_inst = FileInstance()
+    images = FileInstance.objects.all()
+    print(images)
 
-    if request.method == 'GET':
+    if request.method == 'POST':
+        form = InvertImageForm(request.POST, request.FILES)
+        file_inst.save()
+        print("[*] Saving the picture!")
+        #return HttpResponseRedirect(reverse('/'))
+
+    else:
         form = InvertImageForm(initial={})
-    elif request.method == 'POST':
-        form = InvertImageForm(request.POST)
-        book_inst.save()
-        return HttpResponseRedirect(reverse('image uploaded'))
-        
-    return render(
-        request,
-        'index.html',
-        {'form': form, 'fileinst': file_inst}
-        )
 
-    
+    return render(request, 'index.html', {'form': form, 'fileinst':file_inst, 'images':images})
